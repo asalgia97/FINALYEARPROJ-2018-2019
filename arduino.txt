@@ -1,0 +1,208 @@
+//Variable to store text message
+String textMessage;
+ const int red = 2;
+ const int yellow = 3;
+const int green = 4;
+const int white = 5;
+
+#define IN1  6
+#define IN2  7
+#define IN3  8
+#define IN4  9
+int Steps = 5000; //4096 or 768
+int cstep = 0;
+
+//create led status 
+//String redStatus = "LOW";
+//String yellowStatus = "LOW";
+//String greenStatus = "LOW";
+//String whiteStatus = "LOW";
+
+void setup()
+{
+  pinMode(IN1, OUTPUT); 
+  pinMode(IN2, OUTPUT); 
+  pinMode(IN3, OUTPUT); 
+  pinMode(IN4, OUTPUT);
+  
+  //set as OUTPUT
+  pinMode(red,OUTPUT);
+  pinMode(yellow,OUTPUT);
+  pinMode(green,OUTPUT);
+  pinMode(white,OUTPUT);
+
+//by default the leds off
+  digitalWrite(red,LOW);
+  digitalWrite(yellow,LOW);
+  digitalWrite(green,LOW);
+  digitalWrite(white,LOW);
+
+  //initializing serial communication
+Serial.begin(19200);
+
+  //AT-Command to set SIM900 to sms mode
+  Serial.print("AT+CMGF=1\r");
+  Serial.print("AT+CNMI=2,2,0,0,0\r");
+  delay(100);
+}
+//void delSMS() {
+  
+  //Serial.print("AT+CMGDA=\"");
+//}
+
+
+void loop()
+{
+  if(Serial.available()>0)
+  {
+    textMessage = Serial.readString();
+    textMessage.toUpperCase();
+    delay(10);
+  }
+if(textMessage.indexOf("WON")>=0)
+  {
+    //Turn On WHITE LED
+    digitalWrite(white,HIGH);
+    //whiteStatus = "WHITE LED IS ON";
+    textMessage="";
+  }
+if(textMessage.indexOf("WOFF")>=0)
+  {
+    //Turn Off WHITE LED
+    digitalWrite(white,LOW);
+   // whiteStatus = "WHITE LED IS OFF";
+    textMessage="";
+  }
+  if(textMessage.indexOf("RON")>=0)
+  {
+    //Turn On RED LED
+    digitalWrite(red,HIGH);
+   // redStatus = "RED LED IS ON";
+    textMessage="";
+  }
+if(textMessage.indexOf("ROFF")>=0)
+  {
+    //Turn Off RED LED
+    digitalWrite(red,LOW);
+    //redStatus = "RED LED IS OFF";
+    textMessage="";
+  }
+if(textMessage.indexOf("GON")>=0)
+  {
+    //Turn On GREEN LED
+    digitalWrite(green,HIGH);
+    //greenStatus = "GREEN LED IS ON";
+    textMessage="";
+  }
+if(textMessage.indexOf("GOFF")>=0)
+  {
+    //Turn Off GREEN LED
+    digitalWrite(green,LOW);
+   // greenStatus = "GREEN LED IS OFF";
+    textMessage="";
+  }
+if(textMessage.indexOf("YON")>=0)
+  {
+    //Turn On YELLOW LED
+    digitalWrite(yellow,HIGH);
+  //  yellowStatus = "YELLOW LED IS ON";
+    textMessage="";
+  }
+if(textMessage.indexOf("YOFF")>=0)
+  {
+    //Turn Off YELLOW LED
+    digitalWrite(yellow,LOW);
+  //  yellowStatus = "YELLOW LED IS OFF";
+    textMessage="";
+  }
+ 
+  if(textMessage.indexOf("ALLON")>=0)
+  {
+    //Turn on all LED's
+    digitalWrite(red,HIGH);
+    digitalWrite(green,HIGH);
+    digitalWrite(yellow,HIGH);
+    digitalWrite(white,HIGH);
+    textMessage = "";
+  }
+if(textMessage.indexOf("ALLOFF")>=0)
+  {
+    //Turn on all LED's
+    digitalWrite(red,LOW);
+    digitalWrite(green,LOW);
+    digitalWrite(yellow,LOW);
+    digitalWrite(white,LOW);
+    textMessage = "";
+  }
+  for(int x=0;x<Steps;x++)
+  {
+  step1();
+  //delay(1);
+  delayMicroseconds(2500);
+  }
+}
+void step1()
+{
+// if(textMessage.indexOf("RON")>=0){ //stepp
+  switch(cstep)
+  {
+   case 0:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, HIGH);
+   break; 
+   case 1:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, HIGH);
+     digitalWrite(IN4, HIGH);
+   break; 
+   case 2:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, HIGH);
+     digitalWrite(IN4, LOW);
+   break; 
+   case 3:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, HIGH);
+     digitalWrite(IN3, HIGH);
+     digitalWrite(IN4, LOW);
+   break; 
+   case 4:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, HIGH);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, LOW);
+   break; 
+   case 5:
+     digitalWrite(IN1, HIGH); 
+     digitalWrite(IN2, HIGH);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, LOW);
+   break; 
+     case 6:
+     digitalWrite(IN1, HIGH); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, LOW);
+   break; 
+   case 7:
+     digitalWrite(IN1, HIGH); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, HIGH);
+   break; 
+   default:
+     digitalWrite(IN1, LOW); 
+     digitalWrite(IN2, LOW);
+     digitalWrite(IN3, LOW);
+     digitalWrite(IN4, LOW);
+   break; 
+  }
+ 
+   cstep=cstep+1;
+   if(cstep==8)
+     {cstep=0;}
+}
